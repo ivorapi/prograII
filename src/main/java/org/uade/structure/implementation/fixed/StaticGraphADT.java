@@ -2,6 +2,7 @@ package org.uade.structure.implementation.fixed;
 
 import org.uade.structure.definition.GraphADT;
 import org.uade.structure.definition.SetADT;
+import org.uade.exception.GenericADTException;
 
 public class StaticGraphADT implements GraphADT {
 
@@ -90,7 +91,7 @@ public class StaticGraphADT implements GraphADT {
 
     private void checkVertexRange(int v) {
         if (v < 0 || v >= CAPACITY) {
-            throw new IllegalArgumentException("Vértice fuera de rango: " + v);
+            throw new GenericADTException("Vértice fuera de rango: " + v);
         }
     }
 }

@@ -2,6 +2,9 @@ package org.uade.structure.implementation.fixed;
 
 import org.uade.structure.definition.MultipleDictionaryADT;
 import org.uade.structure.definition.SetADT;
+import org.uade.exception.FullADTException;
+import org.uade.exception.EmptyADTException;
+import org.uade.exception.ElementNotFoundADTException;
 
 public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
 
@@ -23,7 +26,7 @@ public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
     @Override
     public void add(int key, int value) {
         if (size == CAPACITY) {
-            throw new IllegalStateException("Diccionario múltiple lleno");
+            throw new FullADTException("Diccionario múltiple lleno");
         }
         keys[size] = key;
         values[size] = value;
@@ -46,14 +49,14 @@ public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
     @Override
     public int[] get(int key) {
         if (isEmpty()) {
-            throw new IllegalStateException("El diccionario está vacío");
+            throw new EmptyADTException("El diccionario está vacío");
         }
         int count = 0;
         for (int i = 0; i < size; i++) {
             if (keys[i] == key) count++;
         }
         if (count == 0) {
-            throw new IllegalStateException("La clave no existe: " + key);
+            throw new ElementNotFoundADTException("La clave no existe: " + key);
         }
         int[] result = new int[count];
         int j = 0;

@@ -1,6 +1,7 @@
 package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.StackADT;
+import org.uade.exception.EmptyADTException;
 
 public class DynamicStackADT implements StackADT {
 
@@ -16,7 +17,7 @@ public class DynamicStackADT implements StackADT {
 
     @Override
     public int getElement() {
-        if (isEmpty()) throw new IllegalStateException("La pila está vacía");
+        if (isEmpty()) throw new EmptyADTException("La pila está vacía");
         return top.value;
     }
 
@@ -30,7 +31,7 @@ public class DynamicStackADT implements StackADT {
 
     @Override
     public void remove() {
-        if (isEmpty()) throw new IllegalStateException("La pila está vacía");
+        if (isEmpty()) throw new EmptyADTException("La pila está vacía");
         top = top.next;
         size--;
     }

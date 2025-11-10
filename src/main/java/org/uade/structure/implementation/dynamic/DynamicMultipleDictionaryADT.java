@@ -2,6 +2,8 @@ package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.MultipleDictionaryADT;
 import org.uade.structure.definition.SetADT;
+import org.uade.exception.EmptyADTException;
+import org.uade.exception.ElementNotFoundADTException;
 
 public class DynamicMultipleDictionaryADT implements MultipleDictionaryADT {
 
@@ -70,10 +72,10 @@ public class DynamicMultipleDictionaryADT implements MultipleDictionaryADT {
 
     @Override
     public int[] get(int key) {
-        if (isEmpty()) throw new IllegalStateException("El diccionario está vacío");
+        if (isEmpty()) throw new EmptyADTException("El diccionario está vacío");
         int count = 0;
         for (Node n = head; n != null; n = n.next) if (n.key == key) count++;
-        if (count == 0) throw new IllegalStateException("La clave no existe: " + key);
+        if (count == 0) throw new ElementNotFoundADTException("La clave no existe: " + key);
         int[] out = new int[count];
         int i = 0;
         for (Node n = head; n != null; n = n.next) if (n.key == key) out[i++] = n.value;

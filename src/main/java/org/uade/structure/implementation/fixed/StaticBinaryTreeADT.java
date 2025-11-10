@@ -1,25 +1,27 @@
 package org.uade.structure.implementation.fixed;
 
 import org.uade.structure.definition.BinaryTreeADT;
+import org.uade.exception.EmptyADTException;
+import org.uade.exception.GenericADTException;
 
 public class StaticBinaryTreeADT implements BinaryTreeADT {
 
-    private Integer root; // null si vacío
+    private int root;
     private StaticBinaryTreeADT left;
     private StaticBinaryTreeADT right;
-    private boolean initialized;
+    private boolean empty;
 
     public StaticBinaryTreeADT() {
-        this.root = null;
+        this.root = 0;
         this.left = null;
         this.right = null;
-        this.initialized = true;
+        this.empty = true;
     }
 
     @Override
     public int getRoot() {
         if (isEmpty()) {
-            throw new IllegalStateException("El árbol está vacío");
+            throw new EmptyADTException("El árbol está vacío");
         }
         return root;
     }
@@ -36,8 +38,9 @@ public class StaticBinaryTreeADT implements BinaryTreeADT {
 
     @Override
     public void add(int value) {
-        if (root == null) {
+        if (empty) {
             root = value;
+            empty = false;
             return;
         }
         if (value < root) {
@@ -57,11 +60,11 @@ public class StaticBinaryTreeADT implements BinaryTreeADT {
 
     @Override
     public boolean isEmpty() {
-        return root == null;
+        return empty;
     }
 
     private StaticBinaryTreeADT delete(int value) {
-        if (root == null) return this;
+        if (empty) return this;
 
         if (value < root) {
             if (left != null) left = left.delete(value);
@@ -89,28 +92,30 @@ public class StaticBinaryTreeADT implements BinaryTreeADT {
 
     private int minValue() {
         StaticBinaryTreeADT curr = this;
-        while (curr.left != null && curr.left.root != null) {
+        while (curr.left != null && !curr.left.empty) {
             curr = curr.left;
         }
-        if (curr.root == null) {
-            throw new IllegalStateException("Árbol inconsistente");
+        if (curr.empty) {
+            throw new GenericADTException("Árbol inconsistente");
         }
         return curr.root;
     }
 
     private void clearNode() {
-        this.root = null;
+        this.root = 0;
         this.left = null;
         this.right = null;
+        this.empty = true;
     }
 
     private void copyFrom(StaticBinaryTreeADT other) {
-        if (other == null || other.root == null) {
+        if (other == null || other.empty) {
             clearNode();
         } else {
             this.root = other.root;
             this.left = other.left;
             this.right = other.right;
+            this.empty = false;
         }
     }
 }

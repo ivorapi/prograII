@@ -1,6 +1,7 @@
 package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.PriorityQueueADT;
+import org.uade.exception.EmptyADTException;
 
 public class DynamicPriorityQueueADT implements PriorityQueueADT {
 
@@ -17,13 +18,13 @@ public class DynamicPriorityQueueADT implements PriorityQueueADT {
 
     @Override
     public int getElement() {
-        if (isEmpty()) throw new IllegalStateException("La prioridad está vacía");
+        if (isEmpty()) throw new EmptyADTException("La prioridad está vacía");
         return head.value;
     }
 
     @Override
     public int getPriority() {
-        if (isEmpty()) throw new IllegalStateException("La prioridad está vacía");
+        if (isEmpty()) throw new EmptyADTException("La prioridad está vacía");
         return head.priority;
     }
 
@@ -47,7 +48,7 @@ public class DynamicPriorityQueueADT implements PriorityQueueADT {
 
     @Override
     public void remove() {
-        if (isEmpty()) throw new IllegalStateException("La prioridad está vacía");
+        if (isEmpty()) throw new EmptyADTException("La prioridad está vacía");
         head = head.next;
         size--;
     }

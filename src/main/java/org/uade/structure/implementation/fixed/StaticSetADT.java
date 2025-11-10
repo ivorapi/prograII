@@ -5,19 +5,31 @@ import org.uade.exception.EmptyADTException;
 import org.uade.exception.FullADTException;
 import org.uade.structure.definition.SetADT;
 
-import java.util.Random;
-
 public class StaticSetADT implements SetADT {
 
     private static final int CAPACITY = 100;
     private int[] elements;
     private int size;
     private boolean initialized;
+    private long seed;
 
     public StaticSetADT() {
         elements = new int[CAPACITY];
         size = 0;
         this.initialized = true;
+        this.seed = currentTimeMillis();
+    }
+
+    // Generador de números pseudo-aleatorios simple (Linear Congruential Generator)
+    private int nextRandomInt(int bound) {
+        seed = (seed * 1103515245 + 12345) & 0x7fffffffL;
+        return (int) (seed % bound);
+    }
+
+    // Obtener tiempo actual sin usar System.currentTimeMillis()
+    private long currentTimeMillis() {
+        // Usar una combinación de hashCode del objeto como semilla inicial
+        return (long) this.hashCode() * 31;
     }
 
     @Override
@@ -33,8 +45,7 @@ public class StaticSetADT implements SetADT {
         if (isEmpty()) {
             throw new EmptyADTException("El conjunto está vacío");
         }
-        Random rand = new Random();
-        return elements[rand.nextInt(size)];
+        return elements[nextRandomInt(size)];
     }
 
     @Override

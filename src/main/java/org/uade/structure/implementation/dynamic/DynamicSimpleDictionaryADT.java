@@ -2,6 +2,8 @@ package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.SimpleDictionaryADT;
 import org.uade.structure.definition.SetADT;
+import org.uade.exception.EmptyADTException;
+import org.uade.exception.ElementNotFoundADTException;
 
 public class DynamicSimpleDictionaryADT implements SimpleDictionaryADT {
 
@@ -60,13 +62,13 @@ public class DynamicSimpleDictionaryADT implements SimpleDictionaryADT {
 
     @Override
     public int get(int key) {
-        if (isEmpty()) throw new IllegalStateException("El diccionario está vacío");
+        if (isEmpty()) throw new EmptyADTException("El diccionario está vacío");
         Node n = head;
         while (n != null) {
             if (n.key == key) return n.value;
             n = n.next;
         }
-        throw new IllegalStateException("La clave no existe: " + key);
+        throw new ElementNotFoundADTException("La clave no existe: " + key);
     }
 
     @Override

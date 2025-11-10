@@ -2,6 +2,9 @@ package org.uade.structure.implementation.fixed;
 
 import org.uade.structure.definition.SimpleDictionaryADT;
 import org.uade.structure.definition.SetADT;
+import org.uade.exception.FullADTException;
+import org.uade.exception.EmptyADTException;
+import org.uade.exception.ElementNotFoundADTException;
 
 public class StaticSimpleDictionaryADT implements SimpleDictionaryADT {
 
@@ -26,7 +29,7 @@ public class StaticSimpleDictionaryADT implements SimpleDictionaryADT {
             return;
         }
         if (size == CAPACITY) {
-            throw new IllegalStateException("Diccionario lleno");
+            throw new FullADTException("Diccionario lleno");
         }
         keys[size] = key;
         values[size] = value;
@@ -48,11 +51,11 @@ public class StaticSimpleDictionaryADT implements SimpleDictionaryADT {
     @Override
     public int get(int key) {
         if (isEmpty()) {
-            throw new IllegalStateException("El diccionario está vacío");
+            throw new EmptyADTException("El diccionario está vacío");
         }
         int idx = indexOfKey(key);
         if (idx == -1) {
-            throw new IllegalStateException("La clave no existe: " + key);
+            throw new ElementNotFoundADTException("La clave no existe: " + key);
         }
         return values[idx];
     }

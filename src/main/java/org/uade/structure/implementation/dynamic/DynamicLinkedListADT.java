@@ -1,6 +1,8 @@
 package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.LinkedListADT;
+import org.uade.exception.EmptyADTException;
+import org.uade.exception.GenericADTException;
 
 public class DynamicLinkedListADT implements LinkedListADT {
 
@@ -51,8 +53,8 @@ public class DynamicLinkedListADT implements LinkedListADT {
 
     @Override
     public void remove(int index) {
-        if (isEmpty()) throw new IllegalStateException("La lista está vacía");
-        if (index < 0 || index >= size) throw new IllegalArgumentException("Índice fuera de rango: " + index);
+        if (isEmpty()) throw new EmptyADTException("La lista está vacía");
+        if (index < 0 || index >= size) throw new GenericADTException("Índice fuera de rango: " + index);
 
         if (index == 0) {
             head = head.next;
@@ -70,8 +72,8 @@ public class DynamicLinkedListADT implements LinkedListADT {
 
     @Override
     public int get(int index) {
-        if (isEmpty()) throw new IllegalStateException("La lista está vacía");
-        if (index < 0 || index >= size) throw new IllegalArgumentException("Índice fuera de rango: " + index);
+        if (isEmpty()) throw new EmptyADTException("La lista está vacía");
+        if (index < 0 || index >= size) throw new GenericADTException("Índice fuera de rango: " + index);
         Node c = head;
         for (int i = 0; i < index; i++) c = c.next;
         return c.value;

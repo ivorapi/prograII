@@ -1,6 +1,7 @@
 package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.BinaryTreeADT;
+import org.uade.exception.EmptyADTException;
 
 public class DynamicBinaryTreeADT implements BinaryTreeADT {
 
@@ -26,7 +27,7 @@ public class DynamicBinaryTreeADT implements BinaryTreeADT {
 
     @Override
     public int getRoot() {
-        if (isEmpty()) throw new IllegalStateException("El árbol está vacío");
+        if (isEmpty()) throw new EmptyADTException("El árbol está vacío");
         return root.value;
     }
 

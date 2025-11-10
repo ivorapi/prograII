@@ -1,8 +1,7 @@
 package org.uade.structure.implementation.dynamic;
 
 import org.uade.structure.definition.SetADT;
-
-import java.util.Random;
+import org.uade.exception.EmptyADTException;
 
 /**
  * Implementación dinámica de SetADT con lista enlazada simple.
@@ -19,7 +18,17 @@ public class DynamicSetADT implements SetADT {
 
     private Node head;
     private int size;
-    private final Random rng = new Random();
+    private long seed;
+
+    public DynamicSetADT() {
+        this.seed = (long) this.hashCode() * 31;
+    }
+
+    // Generador de números pseudo-aleatorios simple (Linear Congruential Generator)
+    private int nextRandomInt(int bound) {
+        seed = (seed * 1103515245 + 12345) & 0x7fffffffL;
+        return (int) (seed % bound);
+    }
 
     @Override
     public boolean exist(int value) {
@@ -33,8 +42,8 @@ public class DynamicSetADT implements SetADT {
 
     @Override
     public int choose() {
-        if (isEmpty()) throw new IllegalStateException("El conjunto está vacío");
-        int idx = rng.nextInt(size); // 0..size-1
+        if (isEmpty()) throw new EmptyADTException("El conjunto está vacío");
+        int idx = nextRandomInt(size); // 0..size-1
         Node c = head;
         for (int i = 0; i < idx; i++) c = c.next;
         return c.value;
