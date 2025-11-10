@@ -1,3 +1,0 @@
-# prograII
-# testII
-# testII

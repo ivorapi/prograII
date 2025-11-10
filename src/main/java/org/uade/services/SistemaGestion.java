@@ -28,17 +28,17 @@ public class SistemaGestion {
 
     private final SimpleDictionaryADT diccPedidos      = new StaticSimpleDictionaryADT();
     private final SimpleDictionaryADT diccRepartidores = new StaticSimpleDictionaryADT();
-    private final SimpleDictionaryADT diccClientes     = new StaticSimpleDictionaryADT(); // nombre -> slot
-    private final SimpleDictionaryADT diccPlatos       = new StaticSimpleDictionaryADT(); // nombre hash -> slot
+    private final SimpleDictionaryADT diccClientes     = new StaticSimpleDictionaryADT();
+    private final SimpleDictionaryADT diccPlatos       = new StaticSimpleDictionaryADT();
 
     private final SetADT setClientes     = new StaticSetADT();
     private final SetADT setPlatos       = new StaticSetADT();
     private final SetADT setRepartidores = new StaticSetADT();
 
-    private final PriorityQueueADT pqPedidos        = new StaticPriorityQueueADT(); // add(value, priority)
-    private final QueueADT         colaCocina       = new StaticQueueADT();         // ids de pedido (1 plato = 1 tarea)
-    private final QueueADT         colaListos       = new StaticQueueADT();         // ids de pedido listos
-    private final QueueADT         poolRepartidores = new StaticQueueADT();         // ids de repartidores
+    private final PriorityQueueADT pqPedidos        = new StaticPriorityQueueADT();
+    private final QueueADT         colaCocina       = new StaticQueueADT();
+    private final QueueADT         colaListos       = new StaticQueueADT();
+    private final QueueADT         poolRepartidores = new StaticQueueADT();
 
     private int nextPedidoId = 1;
     private int nextRepId    = 1;
@@ -83,7 +83,7 @@ public class SistemaGestion {
         int prio = (p.getPrioridad() == Prioridad.VIP) ? 2 : 1;
         pqPedidos.add(id, prio);
 
-        // Registrar cliente si no existe
+
         registrarCliente(p.getCliente());
         p.getCliente().incrementarPedidos();
 
@@ -111,7 +111,7 @@ public class SistemaGestion {
     }
 
     private int hashNombre(String nombre) {
-        // Hash simple para convertir nombre en int
+
         int hash = 0;
         int i = 0;
         while (i < nombre.length()) {
@@ -211,19 +211,19 @@ public class SistemaGestion {
     }
 
     public void reiniciarSistema() {
-        // Limpiar todos los pedidos
+
         int i = 0;
         while (i < 256) {
             pedidosStore[i] = null;
             i++;
         }
 
-        // Limpiar y reiniciar repartidores (mantener los repartidores pero limpiar sus colas)
+
         int slot = 1;
         while (slot < nextRepSlot) {
             Repartidor r = repsStore[slot];
             if (r != null) {
-                // Vaciar la cola de pedidos asignados
+
                 while (!r.getPedidosAsignados().isEmpty()) {
                     r.getPedidosAsignados().remove();
                 }
@@ -231,7 +231,7 @@ public class SistemaGestion {
             slot++;
         }
 
-        // Limpiar diccionarios
+
         SetADT keysPedidos = diccPedidos.getKeys();
         while (!keysPedidos.isEmpty()) {
             int key = keysPedidos.choose();
@@ -239,7 +239,7 @@ public class SistemaGestion {
             keysPedidos.remove(key);
         }
 
-        // Limpiar colas
+
         while (!pqPedidos.isEmpty()) {
             pqPedidos.remove();
         }
@@ -250,7 +250,7 @@ public class SistemaGestion {
             colaListos.remove();
         }
 
-        // Reiniciar pool de repartidores disponibles
+
         while (!poolRepartidores.isEmpty()) {
             poolRepartidores.remove();
         }
@@ -263,7 +263,7 @@ public class SistemaGestion {
             slot++;
         }
 
-        // Reiniciar contadores
+
         nextPedidoSlot = 1;
         nextPedidoId = 1;
     }
@@ -273,7 +273,7 @@ public class SistemaGestion {
     }
 
     public Pedido[] obtenerPedidosPorEstado(Estado estado) {
-        // Contar cuántos pedidos hay en ese estado
+
         int count = 0;
         int slot = 1;
         while (slot < nextPedidoSlot) {
@@ -285,7 +285,7 @@ public class SistemaGestion {
 
         if (count == 0) return new Pedido[0];
 
-        // Crear array con los pedidos encontrados
+
         Pedido[] resultado = new Pedido[count];
         int idx = 0;
         slot = 1;
@@ -332,11 +332,11 @@ public class SistemaGestion {
 
         Repartidor repartidor = repById(idRepartidor);
 
-        // Cambiar estado a DESPACHADO
+
         pedido.setEstado(Estado.DESPACHADO);
 
-        // Asignar repartidor (guardar en alguna estructura si es necesario)
-        // Por ahora solo cambiamos el estado
+
+
 
         return true;
     }
@@ -347,15 +347,15 @@ public class SistemaGestion {
         Pedido pedido = pedidoById(idPedido);
         if (pedido.getEstado() != Estado.DESPACHADO) return false;
 
-        // Cambiar estado a FINALIZADO
+
         pedido.setEstado(Estado.FINALIZADO);
 
         return true;
     }
 
     public int contarPedidosPorRepartidorYEstado(int idRepartidor, Estado estado) {
-        // Por simplicidad, contamos todos los pedidos en ese estado
-        // En una implementación más completa, deberíamos guardar la asignación repartidor-pedido
+
+
         return contarPorEstado(estado);
     }
 
@@ -427,7 +427,7 @@ public class SistemaGestion {
 
 
     private void mostrarTopPlatos(int top) {
-        // Crear un array temporal para ordenar platos por veces pedido
+
         Plato[] platosOrdenados = new Plato[nextPlatoSlot];
         int idx = 0;
         while (idx < nextPlatoSlot) {
@@ -435,7 +435,7 @@ public class SistemaGestion {
             idx++;
         }
 
-        // Ordenar por veces pedido (bubble sort simple)
+
         int i = 0;
         while (i < nextPlatoSlot - 1) {
             int j = 0;
@@ -451,7 +451,7 @@ public class SistemaGestion {
             i++;
         }
 
-        // Mostrar top N platos
+
         int contador = 0;
         int k = 0;
         while (k < nextPlatoSlot && contador < top) {
@@ -470,8 +470,8 @@ public class SistemaGestion {
 
     private int contarPedidosEnCola(QueueADT cola) {
         int count = 0;
-        // No podemos iterar sin destruir la cola, así que usamos un enfoque diferente
-        // Creamos una cola temporal para contar
+
+
         QueueADT temp = new StaticQueueADT();
         while (!cola.isEmpty()) {
             int val = cola.getElement();
@@ -479,7 +479,7 @@ public class SistemaGestion {
             temp.add(val);
             count++;
         }
-        // Restaurar la cola original
+
         while (!temp.isEmpty()) {
             cola.add(temp.getElement());
             temp.remove();

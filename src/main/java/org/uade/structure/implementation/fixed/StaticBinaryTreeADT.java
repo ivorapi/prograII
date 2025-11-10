@@ -28,12 +28,12 @@ public class StaticBinaryTreeADT implements BinaryTreeADT {
 
     @Override
     public BinaryTreeADT getLeft() {
-        return left; // puede ser null si hoja o si está vacío
+        return left;
     }
 
     @Override
     public BinaryTreeADT getRight() {
-        return right; // puede ser null si hoja o si está vacío
+        return right;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class StaticBinaryTreeADT implements BinaryTreeADT {
         if (value < root) {
             if (left == null) left = new StaticBinaryTreeADT();
             left.add(value);
-        } else { // duplicados a la derecha
+        } else {
             if (right == null) right = new StaticBinaryTreeADT();
             right.add(value);
         }
@@ -54,7 +54,7 @@ public class StaticBinaryTreeADT implements BinaryTreeADT {
 
     @Override
     public void remove(int value) {
-        // Borrar en BST: reemplazo por sucesor (mínimo del subárbol derecho) cuando tiene dos hijos
+
         delete(value);
     }
 

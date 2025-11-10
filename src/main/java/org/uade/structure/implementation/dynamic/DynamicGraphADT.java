@@ -14,8 +14,8 @@ public class DynamicGraphADT implements GraphADT {
 
     private static class Vertex {
         int id;
-        Edge adj;     // lista de aristas
-        Vertex next;  // lista de vértices
+        Edge adj;
+        Vertex next;
         Vertex(int id) { this.id = id; }
     }
 
@@ -32,7 +32,11 @@ public class DynamicGraphADT implements GraphADT {
     @Override
     public SetADT getVertxs() {
         SetADT set = new DynamicSetADT();
-        for (Vertex v = vertices; v != null; v = v.next) set.add(v.id);
+        Vertex v = vertices;
+        while (v != null) {
+            set.add(v.id);
+            v = v.next;
+        }
         return set;
     }
 
@@ -47,11 +51,13 @@ public class DynamicGraphADT implements GraphADT {
 
     @Override
     public void removeVertx(int vertex) {
-        // quitar aristas hacia 'vertex'
-        for (Vertex it = vertices; it != null; it = it.next) {
+
+        Vertex it = vertices;
+        while (it != null) {
             if (it.id != vertex) removeEdgeFromAdj(it, vertex);
+            it = it.next;
         }
-        // quitar el vértice
+
         Vertex prev = null, curr = vertices;
         while (curr != null && curr.id != vertex) { prev = curr; curr = curr.next; }
         if (curr == null) return;
@@ -62,16 +68,16 @@ public class DynamicGraphADT implements GraphADT {
 
     @Override
     public void addEdge(int vertxOne, int vertxTwo, int w) {
-        if (vertxOne == vertxTwo) return; // sin lazos (opcional)
+        if (vertxOne == vertxTwo) return;
         Vertex a = findVertex(vertxOne);
         Vertex b = findVertex(vertxTwo);
         if (a == null) { addVertx(vertxOne); a = findVertex(vertxOne); }
         if (b == null) { addVertx(vertxTwo); b = findVertex(vertxTwo); }
-        // A->B
+
         Edge eab = findEdge(a.adj, vertxTwo);
         if (eab != null) eab.weight = w;
         else { Edge ne = new Edge(vertxTwo, w); ne.next = a.adj; a.adj = ne; }
-        // B->A (no dirigido)
+
         Edge eba = findEdge(b.adj, vertxOne);
         if (eba != null) eba.weight = w;
         else { Edge ne = new Edge(vertxOne, w); ne.next = b.adj; b.adj = ne; }
@@ -105,14 +111,22 @@ public class DynamicGraphADT implements GraphADT {
         return verticesCount == 0;
     }
 
-    // -------- Helpers --------
+
     private Vertex findVertex(int id) {
-        for (Vertex v = vertices; v != null; v = v.next) if (v.id == id) return v;
+        Vertex v = vertices;
+        while (v != null) {
+            if (v.id == id) return v;
+            v = v.next;
+        }
         return null;
     }
 
     private Edge findEdge(Edge head, int to) {
-        for (Edge e = head; e != null; e = e.next) if (e.to == to) return e;
+        Edge e = head;
+        while (e != null) {
+            if (e.to == to) return e;
+            e = e.next;
+        }
         return null;
     }
 

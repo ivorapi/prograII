@@ -74,18 +74,33 @@ public class DynamicMultipleDictionaryADT implements MultipleDictionaryADT {
     public int[] get(int key) {
         if (isEmpty()) throw new EmptyADTException("El diccionario está vacío");
         int count = 0;
-        for (Node n = head; n != null; n = n.next) if (n.key == key) count++;
+        Node n = head;
+        while (n != null) {
+            if (n.key == key) count++;
+            n = n.next;
+        }
         if (count == 0) throw new ElementNotFoundADTException("La clave no existe: " + key);
         int[] out = new int[count];
         int i = 0;
-        for (Node n = head; n != null; n = n.next) if (n.key == key) out[i++] = n.value;
+        n = head;
+        while (n != null) {
+            if (n.key == key) {
+                out[i] = n.value;
+                i++;
+            }
+            n = n.next;
+        }
         return out;
     }
 
     @Override
     public SetADT getKeys() {
         SetADT set = new DynamicSetADT();
-        for (Node n = head; n != null; n = n.next) set.add(n.key);
+        Node n = head;
+        while (n != null) {
+            set.add(n.key);
+            n = n.next;
+        }
         return set;
     }
 

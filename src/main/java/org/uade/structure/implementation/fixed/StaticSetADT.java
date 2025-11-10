@@ -20,15 +20,15 @@ public class StaticSetADT implements SetADT {
         this.seed = currentTimeMillis();
     }
 
-    // Generador de números pseudo-aleatorios simple (Linear Congruential Generator)
+
     private int nextRandomInt(int bound) {
         seed = (seed * 1103515245 + 12345) & 0x7fffffffL;
         return (int) (seed % bound);
     }
 
-    // Obtener tiempo actual sin usar System.currentTimeMillis()
+
     private long currentTimeMillis() {
-        // Usar una combinación de hashCode del objeto como semilla inicial
+
         return (long) this.hashCode() * 31;
     }
 

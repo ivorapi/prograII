@@ -7,7 +7,7 @@ import org.uade.structure.implementation.fixed.StaticPriorityQueueADT;
 
 public class PriorityQueueADTUtil extends BaseUtil {
 
-    // Imprimir consumiendo
+
     public static void print(PriorityQueueADT q) {
         while (!q.isEmpty()) {
             System.out.println(q.getElement() + " (p=" + q.getPriority() + ")");
@@ -56,8 +56,10 @@ public class PriorityQueueADTUtil extends BaseUtil {
     }
 
     public static void populateWithRandomValues(PriorityQueueADT queue) {
-        for (int i = 0; i < TOTAL; i++) {
+        int i = 0;
+        while (i < TOTAL) {
             queue.add(randomInteger(), randomInteger());
+            i++;
         }
     }
 

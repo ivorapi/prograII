@@ -10,7 +10,7 @@ public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
 
     private static final int CAPACITY = 100;
 
-    // Representación simple como “lista de pares (key, value)”, permite duplicados
+
     private final int[] keys;
     private final int[] values;
     private int size;
@@ -52,18 +52,23 @@ public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
             throw new EmptyADTException("El diccionario está vacío");
         }
         int count = 0;
-        for (int i = 0; i < size; i++) {
+        int i = 0;
+        while (i < size) {
             if (keys[i] == key) count++;
+            i++;
         }
         if (count == 0) {
             throw new ElementNotFoundADTException("La clave no existe: " + key);
         }
         int[] result = new int[count];
         int j = 0;
-        for (int i = 0; i < size; i++) {
+        i = 0;
+        while (i < size) {
             if (keys[i] == key) {
-                result[j++] = values[i];
+                result[j] = values[i];
+                j++;
             }
+            i++;
         }
         return result;
     }
@@ -71,8 +76,10 @@ public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
     @Override
     public SetADT getKeys() {
         SetADT set = new StaticSetADT();
-        for (int i = 0; i < size; i++) {
-            set.add(keys[i]); // Set filtra duplicados
+        int i = 0;
+        while (i < size) {
+            set.add(keys[i]);
+            i++;
         }
         return set;
     }
@@ -96,9 +103,11 @@ public class StaticMultipleDictionaryADT implements MultipleDictionaryADT {
     }
 
     private void removeAt(int idx) {
-        for (int k = idx; k < size - 1; k++) {
+        int k = idx;
+        while (k < size - 1) {
             keys[k] = keys[k + 1];
             values[k] = values[k + 1];
+            k++;
         }
         size--;
     }

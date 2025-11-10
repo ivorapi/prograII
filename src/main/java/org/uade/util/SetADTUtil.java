@@ -59,8 +59,10 @@ public class SetADTUtil extends BaseUtil {
     }
 
     public static void populateWithRandomValues(SetADT set) {
-        for (int i = 0; i < TOTAL; i++) {
+        int i = 0;
+        while (i < TOTAL) {
             set.add(randomInteger());
+            i++;
         }
     }
 

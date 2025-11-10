@@ -11,8 +11,8 @@ public class DynamicQueueADT implements QueueADT {
         Node(int v) { this.value = v; }
     }
 
-    private Node head; // sale
-    private Node tail; // entra
+    private Node head;
+    private Node tail;
     private int size;
     private boolean initialized = true;
 

@@ -29,7 +29,7 @@ public class DynamicSimpleDictionaryADT implements SimpleDictionaryADT {
         Node n = head;
         while (n != null) {
             if (n.key == key) {
-                n.value = value; // pisa si existe
+                n.value = value;
                 return;
             }
             n = n.next;

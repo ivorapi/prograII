@@ -20,7 +20,7 @@ public class DynamicLinkedListADT implements LinkedListADT {
     @Override
     public void add(int value) {
         Node n = new Node(value);
-        if (tail == null) { // lista vacía
+        if (tail == null) {
             head = tail = n;
         } else {
             tail.next = n;
@@ -40,11 +40,15 @@ public class DynamicLinkedListADT implements LinkedListADT {
             return;
         }
         if (index >= size) {
-            add(value); // insertar al final
+            add(value);
             return;
         }
         Node prev = head;
-        for (int i = 0; i < index - 1; i++) prev = prev.next;
+        int i = 0;
+        while (i < index - 1) {
+            prev = prev.next;
+            i++;
+        }
         Node n = new Node(value);
         n.next = prev.next;
         prev.next = n;
@@ -63,7 +67,11 @@ public class DynamicLinkedListADT implements LinkedListADT {
             return;
         }
         Node prev = head;
-        for (int i = 0; i < index - 1; i++) prev = prev.next;
+        int i = 0;
+        while (i < index - 1) {
+            prev = prev.next;
+            i++;
+        }
         Node target = prev.next;
         prev.next = target.next;
         if (target == tail) tail = prev;
@@ -75,7 +83,11 @@ public class DynamicLinkedListADT implements LinkedListADT {
         if (isEmpty()) throw new EmptyADTException("La lista está vacía");
         if (index < 0 || index >= size) throw new GenericADTException("Índice fuera de rango: " + index);
         Node c = head;
-        for (int i = 0; i < index; i++) c = c.next;
+        int i = 0;
+        while (i < index) {
+            c = c.next;
+            i++;
+        }
         return c.value;
     }
 

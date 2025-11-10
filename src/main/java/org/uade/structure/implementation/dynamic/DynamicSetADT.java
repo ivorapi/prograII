@@ -3,11 +3,7 @@ package org.uade.structure.implementation.dynamic;
 import org.uade.structure.definition.SetADT;
 import org.uade.exception.EmptyADTException;
 
-/**
- * Implementación dinámica de SetADT con lista enlazada simple.
- * IMPORTANTE: Esta clase debe ser CONCRETA (no abstract) para poder instanciarse
- * desde otras TDAs como el MultipleDictionary.
- */
+
 public class DynamicSetADT implements SetADT {
 
     private static class Node {
@@ -24,7 +20,7 @@ public class DynamicSetADT implements SetADT {
         this.seed = (long) this.hashCode() * 31;
     }
 
-    // Generador de números pseudo-aleatorios simple (Linear Congruential Generator)
+
     private int nextRandomInt(int bound) {
         seed = (seed * 1103515245 + 12345) & 0x7fffffffL;
         return (int) (seed % bound);
@@ -43,15 +39,19 @@ public class DynamicSetADT implements SetADT {
     @Override
     public int choose() {
         if (isEmpty()) throw new EmptyADTException("El conjunto está vacío");
-        int idx = nextRandomInt(size); // 0..size-1
+        int idx = nextRandomInt(size);
         Node c = head;
-        for (int i = 0; i < idx; i++) c = c.next;
+        int i = 0;
+        while (i < idx) {
+            c = c.next;
+            i++;
+        }
         return c.value;
     }
 
     @Override
     public void add(int value) {
-        if (exist(value)) return; // evita duplicados
+        if (exist(value)) return;
         Node n = new Node(value);
         n.next = head;
         head = n;

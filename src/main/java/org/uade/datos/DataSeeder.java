@@ -8,7 +8,7 @@ import org.uade.services.SistemaGestion;
 public class DataSeeder {
 
     public static void seed(SistemaGestion sistema, Nodo restaurante) {
-        // Platos disponibles (cargar primero)
+
         Plato pizza = new Plato("Pizza Margherita", 15);
         Plato burger = new Plato("Hamburguesa Completa", 12);
         Plato pasta = new Plato("Pasta Carbonara", 18);
@@ -21,25 +21,27 @@ public class DataSeeder {
         sistema.registrarPlato(ensalada);
         sistema.registrarPlato(milanesa);
 
-        // Clientes
+
         Cliente ana   = new Cliente("Ana García");
         Cliente bruno = new Cliente("Bruno López");
         Cliente carla = new Cliente("Carla Martínez");
 
-        // Repartidores (10)
-        for (int i = 1; i <= 10; i++) {
+
+        int i = 1;
+        while (i <= 10) {
             Repartidor r = new Repartidor(0, "Repartidor " + i, restaurante);
             sistema.registrarRepartidor(r);
+            i++;
         }
 
-        // Pedidos (5) – usamos contadores de platos, no listas dentro del Pedido
+
         sistema.registrarPedido(new Pedido(0, ana,   Tipo.DOMICILIO, Prioridad.VIP,    2, new Nodo("B")));
         sistema.registrarPedido(new Pedido(0, bruno, Tipo.LLEVAR,    Prioridad.NORMAL, 1, null));
         sistema.registrarPedido(new Pedido(0, carla, Tipo.DOMICILIO, Prioridad.NORMAL, 2, new Nodo("C")));
         sistema.registrarPedido(new Pedido(0, bruno, Tipo.DOMICILIO, Prioridad.VIP,    3, new Nodo("D")));
         sistema.registrarPedido(new Pedido(0, ana,   Tipo.DOMICILIO, Prioridad.NORMAL, 2, new Nodo("E")));
 
-        // Simular que algunos platos fueron pedidos para tener estadísticas
+
         pizza.incrementarVecesPedido();
         pizza.incrementarVecesPedido();
         pizza.incrementarVecesPedido();

@@ -19,7 +19,7 @@ public class DynamicBinaryTreeADT implements BinaryTreeADT {
         this.initialized = true;
     }
 
-    // Constructor privado para envolver un subárbol existente
+
     private DynamicBinaryTreeADT(Node node, boolean _unused) {
         this.root = node;
         this.initialized = true;
@@ -33,7 +33,7 @@ public class DynamicBinaryTreeADT implements BinaryTreeADT {
 
     @Override
     public BinaryTreeADT getLeft() {
-        // Nunca null: si no hay hijo, devuelvo un árbol vacío
+
         return new DynamicBinaryTreeADT(root == null ? null : root.left, true);
     }
 
@@ -50,7 +50,7 @@ public class DynamicBinaryTreeADT implements BinaryTreeADT {
     private Node insert(Node n, int v) {
         if (n == null) return new Node(v);
         if (v < n.value) n.left = insert(n.left, v);
-        else n.right = insert(n.right, v); // duplicados a la derecha
+        else n.right = insert(n.right, v);
         return n;
     }
 
@@ -66,11 +66,11 @@ public class DynamicBinaryTreeADT implements BinaryTreeADT {
         } else if (v > n.value) {
             n.right = delete(n.right, v);
         } else {
-            // encontrado
+
             if (n.left == null && n.right == null) return null;
             if (n.left == null) return n.right;
             if (n.right == null) return n.left;
-            // dos hijos: sucesor (min del derecho)
+
             Node s = n.right;
             while (s.left != null) s = s.left;
             n.value = s.value;

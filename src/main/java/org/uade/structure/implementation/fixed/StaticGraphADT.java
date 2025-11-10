@@ -23,8 +23,10 @@ public class StaticGraphADT implements GraphADT {
     @Override
     public SetADT getVertxs() {
         SetADT set = new StaticSetADT();
-        for (int v = 0; v < CAPACITY; v++) {
+        int v = 0;
+        while (v < CAPACITY) {
             if (present[v]) set.add(v);
+            v++;
         }
         return set;
     }
@@ -42,10 +44,12 @@ public class StaticGraphADT implements GraphADT {
     public void removeVertx(int vertex) {
         checkVertexRange(vertex);
         if (!present[vertex]) return;
-        // Borrar sus aristas
-        for (int u = 0; u < CAPACITY; u++) {
+
+        int u = 0;
+        while (u < CAPACITY) {
             weight[vertex][u] = 0;
             weight[u][vertex] = 0;
+            u++;
         }
         present[vertex] = false;
         verticesCount--;
@@ -57,9 +61,9 @@ public class StaticGraphADT implements GraphADT {
         checkVertexRange(vertxTwo);
         if (!present[vertxOne]) addVertx(vertxOne);
         if (!present[vertxTwo]) addVertx(vertxTwo);
-        if (vertxOne == vertxTwo) return; // opcional: ignorar lazos
+        if (vertxOne == vertxTwo) return;
         weight[vertxOne][vertxTwo] = w;
-        weight[vertxTwo][vertxOne] = w; // no dirigido
+        weight[vertxTwo][vertxOne] = w;
     }
 
     @Override

@@ -12,7 +12,7 @@ public class DynamicPriorityQueueADT implements PriorityQueueADT {
         Node(int v, int p) { this.value = v; this.priority = p; }
     }
 
-    private Node head; // mantenido ordenado por prioridad (descendente)
+    private Node head;
     private int size;
     private boolean initialized = true;
 

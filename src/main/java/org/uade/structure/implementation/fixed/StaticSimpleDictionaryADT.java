@@ -41,9 +41,11 @@ public class StaticSimpleDictionaryADT implements SimpleDictionaryADT {
         if (isEmpty()) return;
         int idx = indexOfKey(key);
         if (idx == -1) return;
-        for (int i = idx; i < size - 1; i++) {
+        int i = idx;
+        while (i < size - 1) {
             keys[i] = keys[i + 1];
             values[i] = values[i + 1];
+            i++;
         }
         size--;
     }
@@ -63,8 +65,10 @@ public class StaticSimpleDictionaryADT implements SimpleDictionaryADT {
     @Override
     public SetADT getKeys() {
         SetADT set = new StaticSetADT();
-        for (int i = 0; i < size; i++) {
+        int i = 0;
+        while (i < size) {
             set.add(keys[i]);
+            i++;
         }
         return set;
     }
@@ -75,8 +79,10 @@ public class StaticSimpleDictionaryADT implements SimpleDictionaryADT {
     }
 
     private int indexOfKey(int key) {
-        for (int i = 0; i < size; i++) {
+        int i = 0;
+        while (i < size) {
             if (keys[i] == key) return i;
+            i++;
         }
         return -1;
     }
