@@ -9,8 +9,19 @@ public class Cliente {
         this.pedidosRealizados = 0;
     }
 
-    public String getNombre() { return nombre; }
-    public int getPedidosRealizados() { return pedidosRealizados; }
-    public void incrementarPedidos() { pedidosRealizados++; }
+    public String getNombre() {
+        return nombre;
+    }
 
+    public void setPedidosRealizados(int pedidosRealizados) {
+        this.pedidosRealizados = pedidosRealizados;
+    }
+
+    public int getPedidosRealizados() {
+        return pedidosRealizados;
+    }
+
+    public void incrementarPedidos() {
+        pedidosRealizados++;
+    }
 }

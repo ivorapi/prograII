@@ -1,19 +1,19 @@
 package org.uade.entidades;
 
 public class LineaPedido {
-    private Plato plato;
+    private int codigoPlato;
     private int cantidad;
 
-    public LineaPedido(Plato plato, int cantidad) {
-        this.plato = plato;
+    public LineaPedido(int codigoPlato, int cantidad) {
+        this.codigoPlato = codigoPlato;
         this.cantidad = cantidad;
     }
 
-    public Plato getPlato() { return plato; }
-    public int getCantidad() { return cantidad; }
+    public int getCodigoPlato() {
+        return codigoPlato;
+    }
 
-    @Override
-    public String toString() {
-        return cantidad + "x " + plato.getNombre();
+    public int getCantidad() {
+        return cantidad;
     }
 }

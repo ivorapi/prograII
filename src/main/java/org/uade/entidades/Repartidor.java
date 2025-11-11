@@ -1,34 +1,37 @@
 package org.uade.entidades;
 
-import org.uade.structure.definition.QueueADT;
-import org.uade.structure.implementation.dynamic.DynamicQueueADT;
-
 public class Repartidor {
     private int id;
     private String nombre;
-    private Nodo ubicacionActual;
-    private int entregas;
+    private Nodo nodoActual;
+    private int entregasRealizadas;
 
-    private final QueueADT pedidosAsignados = new DynamicQueueADT();
-
-    public Repartidor(int id, String nombre, Nodo ubicacionInicial) {
+    public Repartidor(int id, String nombre, Nodo nodoActual) {
         this.id = id;
         this.nombre = nombre;
-        this.ubicacionActual = ubicacionInicial;
-        this.entregas = 0;
+        this.nodoActual = nodoActual;
+        this.entregasRealizadas = 0;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getNombre() { return nombre; }
-    public Nodo getUbicacionActual() { return ubicacionActual; }
-    public void setUbicacionActual(Nodo ubicacionActual) { this.ubicacionActual = ubicacionActual; }
-    public QueueADT getPedidosAsignados() { return pedidosAsignados; }
-    public void incrementarEntregas() { entregas++; }
-    public int getEntregas() { return entregas; }
+    public int getId() {
+        return id;
+    }
 
-    @Override
-    public String toString() {
-        return "Repartidor #" + id + " - " + nombre + " (" + entregas + " entregas)";
+    public void setId(int id) { this.id = id; }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public Nodo getNodoActual() {
+        return nodoActual;
+    }
+
+    public int getEntregasRealizadas() {
+        return entregasRealizadas;
+    }
+
+    public void incrementarEntregas() {
+        entregasRealizadas++;
     }
 }

@@ -1,3 +1,3 @@
 package org.uade.enums;
 
-public enum Estado { PENDIENTE, EN_PREPARACION, LISTO, DESPACHADO, FINALIZADO }
+public enum Estado { PENDIENTE,DESPACHADO, FINALIZADO }
