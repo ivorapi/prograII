@@ -13,13 +13,14 @@ import org.uade.structure.implementation.fixed.StaticPriorityQueueADT;
 import org.uade.structure.implementation.fixed.StaticQueueADT;
 import org.uade.structure.implementation.fixed.StaticSetADT;
 import org.uade.structure.implementation.fixed.StaticSimpleDictionaryADT;
+import org.uade.util.QueueADTUtil;
 
 public class SistemaGestion {
 
-    private final Pedido[]     pedidosStore = new Pedido[256];
+    private final Pedido[] pedidosStore = new Pedido[256];
     private final Repartidor[] repsStore    = new Repartidor[128];
-    private final Cliente[]    clientesStore = new Cliente[100];
-    private final Plato[]      platosStore   = new Plato[50];
+    private final Cliente[] clientesStore = new Cliente[100];
+    private final Plato[] platosStore   = new Plato[50];
 
     private int nextPedidoSlot = 1;
     private int nextRepSlot    = 1;
@@ -40,6 +41,9 @@ public class SistemaGestion {
     private final QueueADT         colaListos       = new StaticQueueADT();
     private final QueueADT         poolRepartidores = new StaticQueueADT();
 
+    private final QueueADT pedidosPlatosVip  = new StaticQueueADT();
+    private final QueueADT pedidosPlatosNoVip  = new StaticQueueADT();
+
     private int nextPedidoId = 1;
     private int nextRepId    = 1;
 
@@ -50,6 +54,27 @@ public class SistemaGestion {
     private boolean repExiste(int id) {
         return diccRepartidores.getKeys().exist(id);
     }
+
+
+
+    public void agregarPedidoAPreparacion(QueueADT pedido,Prioridad prioridad) {
+        if (prioridad == Prioridad.VIP) {
+            while (!pedido.isEmpty()) {
+                pedidosPlatosVip.add(pedido.getElement());
+                pedido.remove();
+            }
+        } else {
+            while (!pedido.isEmpty()) {
+                pedidosPlatosNoVip.add(pedido.getElement());
+                pedido.remove();
+            }
+        }
+
+        QueueADTUtil.print(pedidosPlatosVip);
+        QueueADTUtil.print(pedidosPlatosNoVip);
+
+    }
+
 
     private Pedido pedidoById(int id) {
         int slot = diccPedidos.get(id);
@@ -89,6 +114,9 @@ public class SistemaGestion {
 
         return id;
     }
+
+
+
 
     public void registrarCliente(Cliente c) {
         int hash = hashNombre(c.getNombre());

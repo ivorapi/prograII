@@ -1,6 +1,5 @@
 package org.uade;
 
-import org.uade.datos.DataSeeder;
 import org.uade.entidades.Nodo;
 import org.uade.entidades.Cliente;
 import org.uade.entidades.Pedido;
@@ -10,46 +9,24 @@ import org.uade.services.SistemaGestion;
 import org.uade.enums.Prioridad;
 import org.uade.enums.Tipo;
 import org.uade.enums.Estado;
-import org.uade.exception.EmptyADTException;
-import org.uade.exception.FullADTException;
+import org.uade.structure.definition.QueueADT;
+import org.uade.structure.implementation.fixed.StaticQueueADT;
+import org.uade.util.QueueADTUtil;
+
+import java.util.Scanner;
 
 public class Main {
     private static SistemaGestion sistema;
     private static boolean running = true;
-
-
-    private static final String[] PLATOS_MENU = {
-        "Milanesa con puré",
-        "Pizza muzzarella",
-        "Empanadas",
-        "Ensalada César",
-        "Lasaña"
-    };
-
-
-    private static final String[] BARRIOS = {
-        "Palermo",
-        "Recoleta",
-        "Belgrano",
-        "Caballito",
-        "Flores"
-    };
-
-
-    private static final String[] NOMBRES_REPARTIDORES = {
-        "Juan",
-        "María",
-        "Pedro"
-    };
+    private final Scanner scanner = new Scanner(System.in);
+    QueueADT pedido = new StaticQueueADT();
 
     public static void main(String[] args) {
+        Main app = new Main();
         sistema = new SistemaGestion();
         Nodo restaurante = new Nodo("Restaurante");
 
-
         inicializarPlatos();
-
-
         inicializarRepartidores(restaurante);
 
         System.out.println("=================================================");
@@ -60,30 +37,53 @@ public class Main {
 
         while (running) {
             mostrarMenuPrincipal();
-            int opcion = leerOpcion();
-            procesarOpcionPrincipal(opcion);
+            String opcion = app.readLine();
+            app.procesarOpcionPrincipal(opcion);
         }
 
         System.out.println("\n👋 ¡Gracias por usar el sistema! Hasta pronto.");
     }
 
-    private static void inicializarPlatos() {
-        int i = 0;
-        while (i < PLATOS_MENU.length) {
-            Plato plato = new Plato(PLATOS_MENU[i], 10 + i * 5);
-            sistema.registrarPlato(plato);
-            i++;
+    /* =======================
+       Helpers de entrada
+       ======================= */
+
+    private String readLine() {
+        String s = scanner.nextLine();
+        return (s == null) ? null : s.trim();
+    }
+
+    private int readInt() {
+        String s = readLine();
+        if (s == null || s.isEmpty()) return -1;
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 
-    private static void inicializarRepartidores(Nodo restaurante) {
-        int i = 0;
-        while (i < NOMBRES_REPARTIDORES.length) {
-            Repartidor r = new Repartidor(0, NOMBRES_REPARTIDORES[i], restaurante);
-            sistema.registrarRepartidor(r);
-            i++;
-        }
+    /* =======================
+       Inicialización
+       ======================= */
+
+    private static void inicializarPlatos() {
+        sistema.registrarPlato(new Plato("Milanesa con puré", 10));
+        sistema.registrarPlato(new Plato("Pizza muzzarella", 15));
+        sistema.registrarPlato(new Plato("Empanadas", 20));
+        sistema.registrarPlato(new Plato("Ensalada César", 25));
+        sistema.registrarPlato(new Plato("Lasaña", 30));
     }
+
+    private static void inicializarRepartidores(Nodo restaurante) {
+        sistema.registrarRepartidor(new Repartidor(0, "Juan", restaurante));
+        sistema.registrarRepartidor(new Repartidor(0, "María", restaurante));
+        sistema.registrarRepartidor(new Repartidor(0, "Pedro", restaurante));
+    }
+
+    /* =======================
+       Menú principal
+       ======================= */
 
     private static void mostrarMenuPrincipal() {
         System.out.println("\n╔════════════════════════════════════════════════╗");
@@ -96,15 +96,15 @@ public class Main {
         System.out.print("Elegí una opción: ");
     }
 
-    private static void procesarOpcionPrincipal(int opcion) {
+    private void procesarOpcionPrincipal(String opcion) {
         System.out.println();
 
         try {
-            if (opcion == 1) {
+            if ("1".equals(opcion)) {
                 menuAcciones();
-            } else if (opcion == 2) {
+            } else if ("2".equals(opcion)) {
                 menuEstadisticas();
-            } else if (opcion == 0) {
+            } else if ("0".equals(opcion)) {
                 running = false;
             } else {
                 System.out.println("❌ Opción inválida. Por favor elegí 1, 2 o 0.");
@@ -114,9 +114,11 @@ public class Main {
         }
     }
 
+    /* =======================
+       Menú Acciones
+       ======================= */
 
-
-    private static void menuAcciones() {
+    private void menuAcciones() {
         boolean enAcciones = true;
 
         while (enAcciones) {
@@ -130,7 +132,7 @@ public class Main {
             System.out.println("╚════════════════════════════════════════════════╝");
             System.out.print("Elegí una opción: ");
 
-            int opcion = leerOpcion();
+            int opcion = readInt();
             System.out.println();
 
             if (opcion == 1) {
@@ -147,14 +149,13 @@ public class Main {
         }
     }
 
-    private static void accionCrearPedido() {
+    private void accionCrearPedido() {
         System.out.println("╔════════════════════════════════════════════════╗");
         System.out.println("║           CREAR NUEVO PEDIDO                  ║");
         System.out.println("╚════════════════════════════════════════════════╝\n");
 
-
         System.out.print("📝 Ingresá el nombre del cliente: ");
-        String nombreCliente = leerTexto();
+        String nombreCliente = readLine();
         if (nombreCliente == null || nombreCliente.length() == 0) {
             System.out.println("❌ Nombre inválido. Operación cancelada.");
             return;
@@ -162,39 +163,63 @@ public class Main {
 
         Cliente cliente = new Cliente(nombreCliente);
 
-
         System.out.print("⭐ ¿Es cliente VIP? (S/N): ");
-        String respuestaVIP = leerTexto();
-        Prioridad prioridad = Prioridad.NORMAL;
-        if (respuestaVIP != null && (respuestaVIP.equalsIgnoreCase("S") || respuestaVIP.equalsIgnoreCase("SI"))) {
-            prioridad = Prioridad.VIP;
-            System.out.println("✅ Cliente VIP registrado");
-        } else {
-            System.out.println("✅ Cliente NORMAL registrado");
-        }
+        String respuestaVIP = readLine();
+        Prioridad prioridad = (respuestaVIP != null && (respuestaVIP.equalsIgnoreCase("S") || respuestaVIP.equalsIgnoreCase("SI")))
+                ? Prioridad.VIP : Prioridad.NORMAL;
 
+        System.out.println(prioridad == Prioridad.VIP ? "✅ Cliente VIP registrado" : "✅ Cliente NORMAL registrado");
+
+        // Selección de platos en loop
+        int cantidadPlatos = 0;
+        boolean seguirSeleccionando = true;
 
         System.out.println("\n🍽️  PLATOS DISPONIBLES:");
-        int i = 0;
-        while (i < PLATOS_MENU.length) {
-            System.out.println("  " + (i + 1) + ") " + PLATOS_MENU[i]);
-            i++;
+        System.out.println("  1) Milanesa con puré");
+        System.out.println("  2) Pizza muzzarella");
+        System.out.println("  3) Empanadas");
+        System.out.println("  4) Ensalada César");
+        System.out.println("  5) Lasaña");
+        System.out.println("  0) Terminar selección");
+
+
+        while (seguirSeleccionando) {
+            System.out.print("\nSeleccioná un plato (0 para terminar): ");
+            int opcionPlato = readInt();
+
+            if (opcionPlato == 0) {
+                seguirSeleccionando = false;
+            } else if (opcionPlato >= 1 && opcionPlato <= 5) {
+                cantidadPlatos++;
+                String nombrePlato = switch (opcionPlato) {
+                    case 1 -> "Milanesa con puré";
+                    case 2 -> "Pizza muzzarella";
+                    case 3 -> "Empanadas";
+                    case 4 -> "Ensalada César";
+                    case 5 -> "Lasaña";
+                    default -> "";
+                };
+                pedido.add(opcionPlato);
+                System.out.println("✅ Agregado: " + nombrePlato + " (Total: " + cantidadPlatos + ")");
+            } else {
+                System.out.println("❌ Opción inválida.");
+            }
         }
+        sistema.agregarPedidoAPreparacion(pedido, prioridad);
 
-        System.out.print("\n📦 ¿Cuántos platos en total querés agregar? (1-10): ");
-        int cantidadPlatos = leerOpcion();
 
-        if (cantidadPlatos < 1 || cantidadPlatos > 10) {
-            System.out.println("❌ Cantidad inválida. Operación cancelada.");
+
+
+        if (cantidadPlatos == 0) {
+            System.out.println("❌ No se seleccionaron platos. Operación cancelada.");
             return;
         }
-
 
         System.out.println("\n🚚 Tipo de pedido:");
         System.out.println("  1) TAKEAWAY (para llevar)");
         System.out.println("  2) DELIVERY (envío a domicilio)");
         System.out.print("Opción: ");
-        int opcionTipo = leerOpcion();
+        int opcionTipo = readInt();
 
         Tipo tipo;
         Nodo destino = null;
@@ -202,29 +227,35 @@ public class Main {
         if (opcionTipo == 2) {
             tipo = Tipo.DOMICILIO;
 
-
             System.out.println("\n📍 Barrios disponibles para delivery:");
-            int j = 0;
-            while (j < BARRIOS.length) {
-                System.out.println("  " + (j + 1) + ") " + BARRIOS[j]);
-                j++;
+            System.out.println("  1) Palermo");
+            System.out.println("  2) Recoleta");
+            System.out.println("  3) Belgrano");
+            System.out.println("  4) Caballito");
+            System.out.println("  5) Flores");
+
+            System.out.print("Elegí el barrio (1-5): ");
+            int opcionBarrio = readInt();
+
+            String barrioElegido;
+            switch (opcionBarrio) {
+                case 1 -> barrioElegido = "Palermo";
+                case 2 -> barrioElegido = "Recoleta";
+                case 3 -> barrioElegido = "Belgrano";
+                case 4 -> barrioElegido = "Caballito";
+                case 5 -> barrioElegido = "Flores";
+                default -> {
+                    System.out.println("❌ Barrio inválido. Operación cancelada.");
+                    return;
+                }
             }
 
-            System.out.print("Elegí el barrio (1-" + BARRIOS.length + "): ");
-            int opcionBarrio = leerOpcion();
-
-            if (opcionBarrio < 1 || opcionBarrio > BARRIOS.length) {
-                System.out.println("❌ Barrio inválido. Operación cancelada.");
-                return;
-            }
-
-            destino = new Nodo(BARRIOS[opcionBarrio - 1]);
-            System.out.println("✅ Destino: " + BARRIOS[opcionBarrio - 1]);
+            destino = new Nodo(barrioElegido);
+            System.out.println("✅ Destino: " + barrioElegido);
         } else {
             tipo = Tipo.LLEVAR;
             System.out.println("✅ Pedido para LLEVAR");
         }
-
 
         Pedido nuevoPedido = new Pedido(0, cliente, tipo, prioridad, cantidadPlatos, destino);
         int idPedido = sistema.registrarPedido(nuevoPedido);
@@ -241,11 +272,14 @@ public class Main {
         System.out.println("╚════════════════════════════════════════════════╝");
     }
 
-    private static void accionMandarPedido() {
+    /* =======================
+       Mandar / Terminar pedidos
+       ======================= */
+
+    private void accionMandarPedido() {
         System.out.println("╔════════════════════════════════════════════════╗");
         System.out.println("║          MANDAR PEDIDO (DESPACHAR)            ║");
         System.out.println("╚════════════════════════════════════════════════╝\n");
-
 
         Pedido[] pedidosPendientes = sistema.obtenerPedidosPorEstado(Estado.PENDIENTE);
 
@@ -254,20 +288,14 @@ public class Main {
             return;
         }
 
-        System.out.println("📋 PEDIDOS PENDIENTES DE DESPACHAR:");
-        int i = 0;
-        while (i < pedidosPendientes.length) {
-            if (pedidosPendientes[i] != null) {
-                Pedido p = pedidosPendientes[i];
+        for (Pedido p : pedidosPendientes) {
+            if (p != null)
                 System.out.println("  #" + p.getId() + " - Cliente: " + p.getCliente().getNombre() +
-                    " | Tipo: " + p.getTipo() + " | Prioridad: " + p.getPrioridad());
-            }
-            i++;
+                        " | Tipo: " + p.getTipo() + " | Prioridad: " + p.getPrioridad());
         }
 
         System.out.print("\n📦 Ingresá el ID del pedido a despachar: ");
-        int idPedido = leerOpcion();
-
+        int idPedido = readInt();
 
         Pedido pedido = sistema.obtenerPedidoPorId(idPedido);
         if (pedido == null) {
@@ -280,20 +308,13 @@ public class Main {
             return;
         }
 
-
         System.out.println("\n🚴 REPARTIDORES DISPONIBLES:");
-        Repartidor[] repartidores = sistema.obtenerTodosRepartidores();
-        int j = 0;
-        while (j < repartidores.length) {
-            if (repartidores[j] != null) {
-                System.out.println("  " + repartidores[j].getId() + ") " + repartidores[j].getNombre());
-            }
-            j++;
-        }
+        System.out.println("  1) Juan");
+        System.out.println("  2) María");
+        System.out.println("  3) Pedro");
 
         System.out.print("\nElegí el repartidor (ID): ");
-        int idRepartidor = leerOpcion();
-
+        int idRepartidor = readInt();
 
         boolean exito = sistema.despacharPedido(idPedido, idRepartidor);
 
@@ -305,11 +326,10 @@ public class Main {
         }
     }
 
-    private static void accionTerminarPedido() {
+    private void accionTerminarPedido() {
         System.out.println("╔════════════════════════════════════════════════╗");
         System.out.println("║            TERMINAR PEDIDO                    ║");
         System.out.println("╚════════════════════════════════════════════════╝\n");
-
 
         Pedido[] pedidosDespachados = sistema.obtenerPedidosPorEstado(Estado.DESPACHADO);
 
@@ -318,20 +338,14 @@ public class Main {
             return;
         }
 
-        System.out.println("📋 PEDIDOS DESPACHADOS:");
-        int i = 0;
-        while (i < pedidosDespachados.length) {
-            if (pedidosDespachados[i] != null) {
-                Pedido p = pedidosDespachados[i];
+        for (Pedido p : pedidosDespachados) {
+            if (p != null)
                 System.out.println("  #" + p.getId() + " - Cliente: " + p.getCliente().getNombre() +
-                    " | Tipo: " + p.getTipo());
-            }
-            i++;
+                        " | Tipo: " + p.getTipo());
         }
 
         System.out.print("\n✅ Ingresá el ID del pedido a terminar: ");
-        int idPedido = leerOpcion();
-
+        int idPedido = readInt();
 
         Pedido pedido = sistema.obtenerPedidoPorId(idPedido);
         if (pedido == null) {
@@ -344,7 +358,6 @@ public class Main {
             return;
         }
 
-
         boolean exito = sistema.finalizarPedido(idPedido);
 
         if (exito) {
@@ -354,9 +367,11 @@ public class Main {
         }
     }
 
+    /* =======================
+       Menú Estadísticas
+       ======================= */
 
-
-    private static void menuEstadisticas() {
+    private void menuEstadisticas() {
         boolean enEstadisticas = true;
 
         while (enEstadisticas) {
@@ -371,7 +386,7 @@ public class Main {
             System.out.println("╚════════════════════════════════════════════════╝");
             System.out.print("Elegí una opción: ");
 
-            int opcion = leerOpcion();
+            int opcion = readInt();
             System.out.println();
 
             if (opcion == 1) {
@@ -392,134 +407,30 @@ public class Main {
 
     private static void estadisticaPedidosPendientes() {
         int cantidad = sistema.pedidosPendientes();
-
-        System.out.println("╔════════════════════════════════════════════════╗");
-        System.out.println("║     PEDIDOS PENDIENTES A DESPACHAR            ║");
-        System.out.println("╠════════════════════════════════════════════════╣");
-        System.out.println("║                                                ║");
-        System.out.println("║  📋 Cantidad: " + cantidad + " pedido(s)");
-        System.out.println("║                                                ║");
-        System.out.println("╚════════════════════════════════════════════════╝");
+        System.out.println("\n📋 Pedidos pendientes: " + cantidad);
     }
 
     private static void estadisticaPedidosFinalizados() {
         int cantidad = sistema.pedidosFinalizados();
-
-        System.out.println("╔════════════════════════════════════════════════╗");
-        System.out.println("║        PEDIDOS FINALIZADOS                    ║");
-        System.out.println("╠════════════════════════════════════════════════╣");
-        System.out.println("║                                                ║");
-        System.out.println("║  ✅ Cantidad: " + cantidad + " pedido(s)");
-        System.out.println("║                                                ║");
-        System.out.println("╚════════════════════════════════════════════════╝");
+        System.out.println("\n✅ Pedidos finalizados: " + cantidad);
     }
 
     private static void estadisticaPedidosPorRepartidor() {
-        System.out.println("╔════════════════════════════════════════════════╗");
-        System.out.println("║      PEDIDOS POR REPARTIDOR                   ║");
-        System.out.println("╠════════════════════════════════════════════════╣");
-
         Repartidor[] repartidores = sistema.obtenerTodosRepartidores();
-
-        int i = 0;
-        while (i < repartidores.length) {
-            if (repartidores[i] != null) {
-                Repartidor r = repartidores[i];
+        for (Repartidor r : repartidores) {
+            if (r != null) {
                 int despachados = sistema.contarPedidosPorRepartidorYEstado(r.getId(), Estado.DESPACHADO);
                 int finalizados = sistema.contarPedidosPorRepartidorYEstado(r.getId(), Estado.FINALIZADO);
-
-                System.out.println("║                                                ║");
-                System.out.println("║ 🚴 " + r.getNombre());
-                System.out.println("║    Despachados: " + despachados + " | Finalizados: " + finalizados);
+                System.out.println("🚴 " + r.getNombre() + " | Despachados: " + despachados + " | Finalizados: " + finalizados);
             }
-            i++;
         }
-
-        System.out.println("║                                                ║");
-        System.out.println("╚════════════════════════════════════════════════╝");
     }
 
     private static void estadisticaClienteConMasPedidos() {
         Cliente clienteTop = sistema.obtenerClienteConMasPedidos();
-
-        System.out.println("╔════════════════════════════════════════════════╗");
-        System.out.println("║    CLIENTE CON MÁS PEDIDOS                    ║");
-        System.out.println("╠════════════════════════════════════════════════╣");
-
-        if (clienteTop != null) {
-            System.out.println("║                                                ║");
-            System.out.println("║ 👤 Cliente: " + clienteTop.getNombre());
-            System.out.println("║ 📦 Cantidad de pedidos: " + clienteTop.getPedidosRealizados());
-            System.out.println("║                                                ║");
-        } else {
-            System.out.println("║                                                ║");
-            System.out.println("║  ⚠️  No hay clientes registrados               ║");
-            System.out.println("║                                                ║");
-        }
-
-        System.out.println("╚════════════════════════════════════════════════╝");
-    }
-
-
-
-    private static int leerOpcion() {
-        try {
-            byte[] buffer = new byte[10];
-            int bytesRead = System.in.read(buffer);
-            if (bytesRead <= 0) return -1;
-
-            int length = 0;
-            while (length < bytesRead && buffer[length] != '\n' && buffer[length] != '\r') {
-                length++;
-            }
-
-            int resultado = 0;
-            boolean negativo = false;
-            int inicio = 0;
-
-            if (length > 0 && buffer[0] == '-') {
-                negativo = true;
-                inicio = 1;
-            }
-
-            int i = inicio;
-            while (i < length) {
-                if (buffer[i] >= '0' && buffer[i] <= '9') {
-                    resultado = resultado * 10 + (buffer[i] - '0');
-                } else {
-                    return -1;
-                }
-                i++;
-            }
-
-            return negativo ? -resultado : resultado;
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    private static String leerTexto() {
-        try {
-            byte[] buffer = new byte[100];
-            int bytesRead = System.in.read(buffer);
-            if (bytesRead <= 0) return null;
-
-            int length = 0;
-            while (length < bytesRead && buffer[length] != '\n' && buffer[length] != '\r') {
-                length++;
-            }
-
-            String resultado = "";
-            int i = 0;
-            while (i < length) {
-                resultado = resultado + (char) buffer[i];
-                i++;
-            }
-
-            return resultado.trim();
-        } catch (Exception e) {
-            return null;
-        }
+        if (clienteTop != null)
+            System.out.println("👤 Cliente con más pedidos: " + clienteTop.getNombre() + " (" + clienteTop.getPedidosRealizados() + ")");
+        else
+            System.out.println("⚠️  No hay clientes registrados.");
     }
 }
-

@@ -11,7 +11,6 @@ public class Pedido {
     private Tipo tipo;
     private Prioridad prioridad;
     private Estado estado;
-
     private int platosTotales;
     private int platosListos;
     private long tsLlegada;
@@ -45,8 +44,5 @@ public class Pedido {
     public boolean estaCompleto() { return platosListos >= platosTotales; }
     public long getTsLlegada() { return tsLlegada; }
 
-    @Override
-    public String toString() {
-        return "Pedido #" + id + " [" + prioridad + ", " + tipo + ", " + estado + "]";
-    }
+
 }

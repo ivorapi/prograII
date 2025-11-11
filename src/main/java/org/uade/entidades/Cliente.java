@@ -13,19 +13,4 @@ public class Cliente {
     public int getPedidosRealizados() { return pedidosRealizados; }
     public void incrementarPedidos() { pedidosRealizados++; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Cliente)) return false;
-        Cliente c = (Cliente) o;
-        return nombre.equals(c.nombre);
-    }
-
-    @Override
-    public int hashCode() { return nombre.hashCode(); }
-
-    @Override
-    public String toString() {
-        return nombre + " (" + pedidosRealizados + " pedidos)";
-    }
 }
