@@ -180,4 +180,20 @@ public class ServicioDespacho {
 
         System.out.println("\nDistancia total estimada: " + distanciaAcumulada + "\n");
     }
+
+    public boolean forzarEntregaPendientes() {
+        if (idRepartidorEnCarga <= 0) {
+            return false;
+        }
+
+        NodoRepartidor repartidorConPedidos = buscarRepartidor(idRepartidorEnCarga);
+        if (repartidorConPedidos == null || repartidorConPedidos.cantidadPendientes == 0) {
+            return false;
+        }
+
+        realizarRecorridoDeEntrega(repartidorConPedidos);
+        idRepartidorEnCarga = -1;
+        devolverDisponible(repartidorConPedidos.id);
+        return true;
+    }
 }

@@ -45,6 +45,7 @@ public class ServicioReportes {
         }
     }
 
+
     public void imprimirClienteTopPorPlatosEnUnPedido() {
         ServicioPedidos.NodoPedido cur = servicioPedidos.obtenerCabezaPedidos();
         if (cur == null) {
@@ -67,15 +68,17 @@ public class ServicioReportes {
         }
 
         System.out.println("• Cliente con mayor número de pedidos: (medido por el pedido con más platos)");
-        NombreNodo impresos = null;
+
+        NombreNodo yaImpresos = null;
 
         cur = servicioPedidos.obtenerCabezaPedidos();
         while (cur != null) {
             if (cur.pedido != null && cur.pedido.getCliente() != null) {
                 if (cur.pedido.getCantidadPlatos() == maxPlatos) {
-                    String nombre = trimSeguro(cur.pedido.getCliente().getNombre());
-                    if (nombre != null && nombre.length() > 0 && !yaImpreso(impresos, nombre)) {
-                        impresos = agregarNombre(impresos, nombre);
+                    String nombre = cur.pedido.getCliente().getNombre();
+                    if (nombre != null) nombre = nombre.trim();
+                    if (nombre != null && !nombre.isEmpty() && !yaImpreso(yaImpresos, nombre)) {
+                        yaImpresos = agregarNombre(yaImpresos, nombre);
                         System.out.println("  - " + nombre + " (platos en su pedido más grande: " + maxPlatos + ")");
                     }
                 }
@@ -89,9 +92,15 @@ public class ServicioReportes {
         int count = 0;
         DynamicQueueADT tmp = new DynamicQueueADT();
         while (!q.isEmpty()) {
-            int v = q.getElement(); tmp.add(v); q.remove(); count++;
+            int v = q.getElement();
+            tmp.add(v);
+            q.remove();
+            count++;
         }
-        while (!tmp.isEmpty()) { q.add(tmp.getElement()); tmp.remove(); }
+        while (!tmp.isEmpty()) {
+            q.add(tmp.getElement());
+            tmp.remove();
+        }
         return count;
     }
 
@@ -101,10 +110,10 @@ public class ServicioReportes {
     }
 
     private boolean yaImpreso(NombreNodo head, String n) {
-        NombreNodo c = head;
-        while (c != null) {
-            if (equalsIgnoreCase(c.nombre, n)) return true;
-            c = c.sig;
+        NombreNodo nombreNodo = head;
+        while (nombreNodo != null) {
+            if (nombreNodo.nombre != null && nombreNodo.nombre.equalsIgnoreCase(n)) return true;
+            nombreNodo = nombreNodo.sig;
         }
         return false;
     }
@@ -113,32 +122,5 @@ public class ServicioReportes {
         NombreNodo nn = new NombreNodo(n);
         nn.sig = head;
         return nn;
-    }
-
-    private String trimSeguro(String s) {
-        if (s == null) return null;
-        int i = 0, j = s.length() - 1;
-        while (i <= j && esEspacio(s.charAt(i))) i++;
-        while (j >= i && esEspacio(s.charAt(j))) j--;
-        if (i > j) return "";
-        String r = "";
-        int k = i;
-        while (k <= j) { r += s.charAt(k); k++; }
-        return r;
-    }
-
-    private boolean esEspacio(char c) { return c==' ' || c=='\t' || c=='\n' || c=='\r'; }
-
-    private boolean equalsIgnoreCase(String a, String b) {
-        if (a == null || b == null) return false;
-        int la = a.length(), lb = b.length(); if (la != lb) return false;
-        int i = 0;
-        while (i < la) {
-            char ca = a.charAt(i), cb = b.charAt(i);
-            if (ca >= 'A' && ca <= 'Z') ca = (char)(ca - 'A' + 'a');
-            if (cb >= 'A' && cb <= 'Z') cb = (char)(cb - 'A' + 'a');
-            if (ca != cb) return false; i++;
-        }
-        return true;
     }
 }

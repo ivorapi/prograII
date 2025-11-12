@@ -27,7 +27,7 @@ public class Main {
         System.out.println("=================================================");
         System.out.println("Sistema inicializado correctamente");
         System.out.println("=================================================\n");
-
+        precargarPedidos();
         while (aplicacionEjecutandose) {
             aplicacion.mostrarMenuPrincipal();
             String opcionElegida = aplicacion.leerLinea();
@@ -36,7 +36,58 @@ public class Main {
 
         System.out.println("\n👋 ¡Gracias por usar el sistema! Hasta pronto.");
     }
+    private static void precargarPedidos() {
+        System.out.println("Precargando 5 pedidos de ejemplo...");
 
+        // Pedido 1: VIP
+        Cliente cliente1 = new Cliente("Maria Rodriguez");
+        DynamicQueueADT platos1 = new DynamicQueueADT();
+        platos1.add(1); // Milanesa
+        platos1.add(2); // Pizza
+        Nodo destino1 = new Nodo("Palermo");
+        Pedido pedido1 = new Pedido(0, cliente1, Tipo.DOMICILIO, Prioridad.VIP, 2, destino1);
+        sistemaGestion.agregarPedido(pedido1);
+        sistemaGestion.agregarPedidoACocina(platos1, Prioridad.VIP);
+
+        // Pedido 2: Normal
+        Cliente cliente2 = new Cliente("Juan Perez");
+        DynamicQueueADT platos2 = new DynamicQueueADT();
+        platos2.add(3); // Empanadas
+        Pedido pedido2 = new Pedido(0, cliente2, Tipo.LLEVAR, Prioridad.NORMAL, 1, null);
+        sistemaGestion.agregarPedido(pedido2);
+        sistemaGestion.agregarPedidoACocina(platos2, Prioridad.NORMAL);
+
+        // Pedido 3: Normal
+        Cliente cliente3 = new Cliente("Ana Lopez");
+        DynamicQueueADT platos3 = new DynamicQueueADT();
+        platos3.add(4); // Ensalada
+        platos3.add(5); // Lasaña
+        platos3.add(2); // Pizza
+        Nodo destino3 = new Nodo("Recoleta");
+        Pedido pedido3 = new Pedido(0, cliente3, Tipo.DOMICILIO, Prioridad.NORMAL, 3, destino3);
+        sistemaGestion.agregarPedido(pedido3);
+        sistemaGestion.agregarPedidoACocina(platos3, Prioridad.NORMAL);
+
+        // Pedido 4: VIP
+        Cliente cliente4 = new Cliente("Carlos Gomez");
+        DynamicQueueADT platos4 = new DynamicQueueADT();
+        platos4.add(1); // Milanesa
+        Pedido pedido4 = new Pedido(0, cliente4, Tipo.LLEVAR, Prioridad.VIP, 1, null);
+        sistemaGestion.agregarPedido(pedido4);
+        sistemaGestion.agregarPedidoACocina(platos4, Prioridad.VIP);
+
+        // Pedido 5: Normal
+        Cliente cliente5 = new Cliente("Sofia Martinez");
+        DynamicQueueADT platos5 = new DynamicQueueADT();
+        platos5.add(2); // Pizza
+        platos5.add(3); // Empanadas
+        Nodo destino5 = new Nodo("Belgrano");
+        Pedido pedido5 = new Pedido(0, cliente5, Tipo.DOMICILIO, Prioridad.NORMAL, 2, destino5);
+        sistemaGestion.agregarPedido(pedido5);
+        sistemaGestion.agregarPedidoACocina(platos5, Prioridad.NORMAL);
+
+        System.out.println("✅ 5 pedidos precargados exitosamente");
+    }
 
     private String leerLinea() {
         String texto = lectorConsola.nextLine();
@@ -98,6 +149,7 @@ public class Main {
             System.out.println("║ 1) Crear un nuevo pedido                      ║");
             System.out.println("║ 2) Cocinar y cumplir el siguiente pedido      ║");
             System.out.println("║ 3) Ver estado de repartidores                 ║");
+            System.out.println("║ 4) Forzar entrega de pedidos despachados      ║");
             System.out.println("║ 9) Volver al menú principal                   ║");
             System.out.println("╚════════════════════════════════════════════════╝");
             System.out.print("Elegí una opción: ");
@@ -111,6 +163,8 @@ public class Main {
                 accionCocinarYCumplirSiguiente();
             } else if (opcionAccion == 3) {
                 accionVerRepartidores();
+            } else if (opcionAccion == 4) {
+                accionForzarEntregaDespachados();
             } else if (opcionAccion == 9) {
                 continuarEnAcciones = false;
             } else {
@@ -274,6 +328,19 @@ public class Main {
         }
     }
 
+    private void accionForzarEntregaDespachados() {
+        System.out.println("╔════════════════════════════════════════════════╗");
+        System.out.println("║   FORZAR ENTREGA DE PEDIDOS DESPACHADOS       ║");
+        System.out.println("╚════════════════════════════════════════════════╝\n");
+
+        boolean seRealizoEntrega = sistemaGestion.forzarEntregaDespachados();
+
+        if (seRealizoEntrega) {
+            System.out.println("✅ Se realizó la entrega de los pedidos despachados");
+        } else {
+            System.out.println("⚠️  No hay pedidos despachados pendientes de entregar");
+        }
+    }
 
     private void mostrarMenuEstadisticas() {
         boolean continuarEnEstadisticas = true;

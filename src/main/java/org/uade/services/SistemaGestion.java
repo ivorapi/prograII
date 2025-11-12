@@ -1,6 +1,7 @@
 package org.uade.services;
 
 import org.uade.entidades.Pedido;
+import org.uade.entidades.Repartidor;
 import org.uade.enums.Prioridad;
 import org.uade.structure.implementation.dynamic.DynamicQueueADT;
 
@@ -24,12 +25,12 @@ public class SistemaGestion {
         this.servicioDespacho = new ServicioDespacho(servicioPedidos, servicioMapaCiudad);
         this.servicioReportes = new ServicioReportes(servicioPedidos, servicioDespacho, colaPedidosPendientesVip, colaPedidosPendientesNoVip);
 
-        registrarRepartidor(new org.uade.entidades.Repartidor(0, "Juan", null));
-        registrarRepartidor(new org.uade.entidades.Repartidor(0, "María", null));
-        registrarRepartidor(new org.uade.entidades.Repartidor(0, "Pedro", null));
+        registrarRepartidor(new Repartidor(0, "Juan", null));
+        registrarRepartidor(new Repartidor(0, "María", null));
+        registrarRepartidor(new Repartidor(0, "Pedro", null));
     }
 
-    public void registrarRepartidor(org.uade.entidades.Repartidor repartidor) {
+    public void registrarRepartidor(Repartidor repartidor) {
         servicioDespacho.registrarRepartidor(repartidor);
     }
     public ServicioDespacho.NodoRepartidor getRepartidoresHead() { return servicioDespacho.getRepartidoresHead(); }
@@ -48,4 +49,8 @@ public class SistemaGestion {
     public void mostrarFinalizados()            { servicioReportes.imprimirCantidadFinalizados(); }
     public void mostrarEntregasPorRepartidor()  { servicioReportes.imprimirEntregasPorRepartidor(); }
     public void mostrarClienteTop()             { servicioReportes.imprimirClienteTopPorPlatosEnUnPedido(); }
+
+    public boolean forzarEntregaDespachados() {
+        return servicioDespacho.forzarEntregaPendientes();
+    }
 }
