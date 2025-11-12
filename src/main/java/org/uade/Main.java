@@ -16,7 +16,8 @@ public class Main {
     private static SistemaGestion sistemaGestion;
     private static boolean aplicacionEjecutandose = true;
 
-    private final Scanner lectorConsola = new Scanner(System.in);
+    private static final Scanner lectorConsola = new Scanner(System.in);
+
 
     public static void main(String[] args) {
         Main aplicacion = new Main();
@@ -30,7 +31,8 @@ public class Main {
         precargarPedidos();
         while (aplicacionEjecutandose) {
             aplicacion.mostrarMenuPrincipal();
-            String opcionElegida = aplicacion.leerLinea();
+            String opcionElegida = lectorConsola.nextLine();
+            System.out.println();
             aplicacion.procesarOpcionMenuPrincipal(opcionElegida);
         }
 
@@ -89,26 +91,6 @@ public class Main {
         System.out.println("✅ 5 pedidos precargados exitosamente");
     }
 
-    private String leerLinea() {
-        String texto = lectorConsola.nextLine();
-        if (texto == null) return null;
-        return texto.trim();
-    }
-
-    private int leerEntero() {
-        String texto = leerLinea();
-        if (texto == null || texto.length() == 0) return -1;
-        int signo = 1, i = 0, res = 0;
-        if (texto.charAt(0) == '-') { signo = -1; i = 1; }
-        while (i < texto.length()) {
-            char c = texto.charAt(i);
-            if (c < '0' || c > '9') return -1;
-            res = res * 10 + (c - '0');
-            i++;
-        }
-        return signo * res;
-    }
-
 
     private void mostrarMenuPrincipal() {
         System.out.println("\n╔════════════════════════════════════════════════╗");
@@ -154,7 +136,8 @@ public class Main {
             System.out.println("╚════════════════════════════════════════════════╝");
             System.out.print("Elegí una opción: ");
 
-            int opcionAccion = leerEntero();
+            int opcionAccion = lectorConsola.nextInt();
+            lectorConsola.nextLine();
             System.out.println();
 
             if (opcionAccion == 1) {
@@ -179,7 +162,8 @@ public class Main {
         System.out.println("╚════════════════════════════════════════════════╝\n");
 
         System.out.print("📝 Ingresá el nombre del cliente: ");
-        String nombreDelCliente = leerLinea();
+        String nombreDelCliente = lectorConsola.nextLine();
+        System.out.println();
         if (nombreDelCliente == null || nombreDelCliente.length() == 0) {
             System.out.println("❌ Nombre inválido. Operación cancelada.");
             return;
@@ -187,7 +171,8 @@ public class Main {
         Cliente cliente = new Cliente(nombreDelCliente);
 
         System.out.print("⭐ ¿Es cliente VIP? (S/N): ");
-        String respuestaVip = leerLinea();
+        String respuestaVip = lectorConsola.nextLine();
+        System.out.println();
         Prioridad prioridadDelPedido = (respuestaVip != null && (respuestaVip.equalsIgnoreCase("S") || respuestaVip.equalsIgnoreCase("SI")))
                 ? Prioridad.VIP : Prioridad.NORMAL;
         System.out.println(prioridadDelPedido == Prioridad.VIP ? "✅ Cliente VIP registrado" : "✅ Cliente NORMAL registrado");
@@ -206,7 +191,9 @@ public class Main {
 
         while (seguirSeleccionandoPlatos) {
             System.out.print("\nSeleccioná un plato (0 para terminar): ");
-            int opcionPlato = leerEntero();
+            int opcionPlato = lectorConsola.nextInt();
+            lectorConsola.nextLine();
+            System.out.println();
 
             if (opcionPlato == 0) {
                 seguirSeleccionandoPlatos = false;
@@ -236,7 +223,9 @@ public class Main {
         System.out.println("  1) TAKEAWAY (para llevar)");
         System.out.println("  2) DELIVERY (envío a domicilio)");
         System.out.print("Opción: ");
-        int opcionTipoPedido = leerEntero();
+        int opcionTipoPedido = lectorConsola.nextInt();
+        lectorConsola.nextLine();
+        System.out.println();
 
         Tipo tipoDePedido;
         Nodo nodoDestino = null;
@@ -251,7 +240,9 @@ public class Main {
             System.out.println("  4) Caballito");
             System.out.println("  5) Flores");
             System.out.print("Elegí el barrio (1-5): ");
-            int opcionBarrio = leerEntero();
+            int opcionBarrio = lectorConsola.nextInt();
+            lectorConsola.nextLine();
+            System.out.println();
 
             String nombreBarrio;
             if      (opcionBarrio == 1) nombreBarrio = "Palermo";
@@ -358,7 +349,8 @@ public class Main {
             System.out.println("╚════════════════════════════════════════════════╝");
             System.out.print("Elegí una opción: ");
 
-            int opcionEstadistica = leerEntero();
+            int opcionEstadistica = lectorConsola.nextInt();
+            lectorConsola.nextLine();
             System.out.println();
 
             if (opcionEstadistica == 1) {
