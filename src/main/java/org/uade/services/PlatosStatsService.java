@@ -16,14 +16,14 @@ public class PlatosStatsService {
     private KeyNode head = null;
 
     private void ensureKeyTracked(int key) {
-        KeyNode cur = head;
-        while (cur != null) {
-            if (cur.key == key) return;
-            cur = cur.next;
+        KeyNode nodoActual = head;
+        while (nodoActual != null) {
+            if (nodoActual.key == key) return;
+            nodoActual = nodoActual.next;
         }
-        KeyNode n = new KeyNode(key);
-        n.next = head;
-        head = n;
+        KeyNode nuevoNodo = new KeyNode(key);
+        nuevoNodo.next = head;
+        head = nuevoNodo;
     }
 
     private int safeGet(SimpleDictionaryADT d, int key) {
@@ -47,27 +47,27 @@ public class PlatosStatsService {
             return;
         }
 
-        int maxCount = -1;
-        KeyNode cur = head;
-        while (cur != null) {
-            int count = safeGet(dict, cur.key);
-            if (count > maxCount) maxCount = count;
-            cur = cur.next;
+        int cantidadMaxima = -1;
+        KeyNode nodoActual = head;
+        while (nodoActual != null) {
+            int cantidadPedidos = safeGet(dict, nodoActual.key);
+            if (cantidadPedidos > cantidadMaxima) cantidadMaxima = cantidadPedidos;
+            nodoActual = nodoActual.next;
         }
 
-        if (maxCount <= 0) {
+        if (cantidadMaxima <= 0) {
             System.out.println("🍽️ No hay registros de platos aún.");
             return;
         }
 
-        System.out.println("🍽️ Platos más pedidos (cantidad = " + maxCount + "):");
-        cur = head;
-        while (cur != null) {
-            int count = safeGet(dict, cur.key);
-            if (count == maxCount) {
-                System.out.println("  Plato #" + cur.key + " (x" + count + ") " + nombrePlato(cur.key));
+        System.out.println("🍽️ Platos más pedidos (cantidad = " + cantidadMaxima + "):");
+        nodoActual = head;
+        while (nodoActual != null) {
+            int cantidadPedidos = safeGet(dict, nodoActual.key);
+            if (cantidadPedidos == cantidadMaxima) {
+                System.out.println("  Plato #" + nodoActual.key + " (x" + cantidadPedidos + ") " + nombrePlato(nodoActual.key));
             }
-            cur = cur.next;
+            nodoActual = nodoActual.next;
         }
     }
 
