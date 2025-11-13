@@ -11,7 +11,7 @@ public class PlatosStatsService {
     private static class KeyNode {
         int key;
         KeyNode next;
-        KeyNode(int k){ this.key = k; }
+        KeyNode(int clavePlato){ this.key = clavePlato; }
     }
     private KeyNode head = null;
 

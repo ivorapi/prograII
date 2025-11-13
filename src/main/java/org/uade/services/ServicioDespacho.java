@@ -41,10 +41,10 @@ public class ServicioDespacho {
     }
 
 
-    public void registrarRepartidor(Repartidor r) {
+    public void registrarRepartidor(Repartidor repartidor) {
         int id = proximoIdRepartidor++;
-        r.setId(id);
-        NodoRepartidor nodo = new NodoRepartidor(id, r, 5);
+        repartidor.setId(id);
+        NodoRepartidor nodo = new NodoRepartidor(id, repartidor, 5);
         nodo.siguiente = inicioListaRepartidores;
         inicioListaRepartidores = nodo;
         colaRepartidoresDisponibles.add(id);

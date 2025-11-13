@@ -50,16 +50,7 @@ public class ServicioMapaCiudad {
     }
 
     private boolean eqi(String a, String b) {
-        if (a == null || b == null) return false;
-        int la = a.length(), lb = b.length(); if (la != lb) return false;
-        int i = 0;
-        while (i < la) {
-            char ca = a.charAt(i), cb = b.charAt(i);
-            if (ca >= 'A' && ca <= 'Z') ca = (char)(ca - 'A' + 'a');
-            if (cb >= 'A' && cb <= 'Z') cb = (char)(cb - 'A' + 'a');
-            if (ca != cb) return false; i++;
-        }
-        return true;
+        return a != null && a.equalsIgnoreCase(b);
     }
 
     public int calcularDistanciaMinima(int origen, int destino) {
